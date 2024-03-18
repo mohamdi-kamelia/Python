@@ -1,7 +1,7 @@
 import tkinter as tk
 import random
 
-class MineSweeperGUI:
+class Case:
     def __init__(self, master, rows, cols):
         self.master = master
         self.rows = rows
@@ -29,7 +29,7 @@ def main():
     rows = 10
     cols = 10
     
-    minesweeper_gui = MineSweeperGUI(root, rows, cols)
+    minesweeper_gui = Case(root, rows, cols)
     
     root.mainloop()
 
