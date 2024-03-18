@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-
+from cases import main
 class PageAccueil(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -39,8 +39,8 @@ class PageAccueil(tk.Tk):
         self.destroy()
 
     def demarrer_jeu(self):
-        print("Le jeu démarre...")
-
+        self.destroy()
+        main()
 if __name__ == "__main__":
     page_accueil = PageAccueil()
     page_accueil.mainloop()
