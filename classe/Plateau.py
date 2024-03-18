@@ -15,9 +15,11 @@ class Plateau:
         case.revele = True
         if case.mine:
             print("Perdu")
-        if self.verifierVoisins(x, y) == 0:
-            self.cliquerVoisins(x, y)
         else:
+            minesAdjacentes = self.verifierVoisins(x, y)
+            case.minesAdjacentes = minesAdjacentes
+            if minesAdjacentes == 0:
+                self.revelerVoisins(x, y)
             
         
     def verifierVoisins(self, x, y):
@@ -28,8 +30,9 @@ class Plateau:
             if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
                 case = self.grille[coordonne[0]][coordonne[1]]
                 casesAdjacentes.append(case)
-                if case.mine:
-                    minesAdjacentes += 1
+                for case in casesAdjacentes:
+                    if case.mine:
+                        minesAdjacentes += 1
         return minesAdjacentes
 
 
