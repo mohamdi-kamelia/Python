@@ -1,11 +1,11 @@
 from Case import Case
+import random
 
 class Plateau:
     def __init__(self, lignes, colonnes, mines):
         self.lignes = lignes
         self.colonnes = colonnes
-        self.mines = mines
-        
+        self.mines = mines        
 
     def creerPlateau(self):
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
@@ -25,8 +25,7 @@ class Plateau:
                     if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
                         case = self.grille[coordonne[0]][coordonne[1]]
                         if not case.revele:
-                            self.cliquer(coordonne[0], coordonne[1])
-                
+                            self.cliquer(coordonne[0], coordonne[1])                
         
     def verifierVoisins(self, x, y):
         minesAdjacentes = 0
@@ -38,26 +37,33 @@ class Plateau:
                     minesAdjacentes += 1
         return minesAdjacentes
 
-
     def afficher(self):
         for ligne in self.grille:
             for case in ligne:
                 if case.revele:
                     print(case.minesAdjacentes, end="")
+                elif case.mine:
+                    print("*", end="")
                 else:
                     print("-", end="")
             print()
     
     def placerMine(self, x, y):
         self.grille[x][y].mine = True
+
+    def placerMines(self):
+        for i in range(self.mines):
+            x = random.randint(0, self.lignes-1)
+            y = random.randint(0, self.colonnes-1)
+            if not self.grille[x][y].mine and not self.grille[x][y].revele:
+                self.placerMine(x, y)
+            else:
+                i -= 1
         
 
 if __name__ == "__main__":
     plateau = Plateau(10, 10, 10)
     plateau.creerPlateau()
-    plateau.placerMine(2, 3)
-    plateau.placerMine(2, 5)
-    plateau.placerMine(4, 7)
-    plateau.placerMine(5, 9)
+    plateau.placerMines()
     plateau.cliquer(0, 0)
     plateau.afficher()
