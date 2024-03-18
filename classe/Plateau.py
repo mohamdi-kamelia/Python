@@ -10,7 +10,8 @@ class Plateau:
     def creerPlateau(self):
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
 
-    def cliquer(self, x, y):        
+    def cliquer(self, x, y):
+        coordonnes = []        
         case = self.grille[x][y]
         case.revele = True
         if case.mine:
@@ -19,20 +20,22 @@ class Plateau:
             minesAdjacentes = self.verifierVoisins(x, y)
             case.minesAdjacentes = minesAdjacentes
             if minesAdjacentes == 0:
-                self.revelerVoisins(x, y)
-            
+                coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
+                for coordonne in coordonnes:
+                    if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
+                        case = self.grille[coordonne[0]][coordonne[1]]
+                        if not case.revele:
+                            self.cliquer(coordonne[0], coordonne[1])
+                
         
     def verifierVoisins(self, x, y):
-        casesAdjacentes = []
         minesAdjacentes = 0
         coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
         for coordonne in coordonnes:
             if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
                 case = self.grille[coordonne[0]][coordonne[1]]
-                casesAdjacentes.append(case)
-                for case in casesAdjacentes:
-                    if case.mine:
-                        minesAdjacentes += 1
+                if case.mine:
+                    minesAdjacentes += 1
         return minesAdjacentes
 
 
@@ -40,7 +43,7 @@ class Plateau:
         for ligne in self.grille:
             for case in ligne:
                 if case.revele:
-                    print("X", end="")
+                    print(case.minesAdjacentes, end="")
                 else:
                     print("-", end="")
             print()
@@ -54,5 +57,7 @@ if __name__ == "__main__":
     plateau.creerPlateau()
     plateau.placerMine(2, 3)
     plateau.placerMine(2, 5)
-    plateau.cliquer(2, 4)
+    plateau.placerMine(4, 7)
+    plateau.placerMine(5, 9)
+    plateau.cliquer(0, 0)
     plateau.afficher()
