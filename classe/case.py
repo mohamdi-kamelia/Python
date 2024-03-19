@@ -15,4 +15,3 @@ class Case:
                 self.interrogation = False
             else:
                 self.drapeau = True   
-    
