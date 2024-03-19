@@ -31,28 +31,27 @@ class Plateau:
         if self.mode == "facile":
             self.lignes = 8
             self.colonnes = 8
-            self.mines = 10
+            self.mines = random.randint(5, 15) 
         elif self.mode == "moyen":
             self.lignes = 10
             self.colonnes = 10
-            self.mines = 20
+            self.mines = random.randint(15, 25)
         elif self.mode == "difficile":
             self.lignes = 12
             self.colonnes = 12
-            self.mines = 30
+            self.mines = random.randint(25, 35) 
         else:
             raise ValueError("Mode de difficulté non valide")
         self.premierCoup = True
         self.creerPlateau()
         self.root.mainloop()
-
     def creerPlateau(self):
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
         self.buttons = []
         for row in range(self.lignes):
             button_row = []
             for col in range(self.colonnes):
-                button = tk.Button(self.root, width=6, height=3,bg="white", command=lambda r=row, c=col: self.cliquer(r, c))
+                button = tk.Button(self.root, width=6, height=3,font=("Arial", 16),bg="white", command=lambda r=row, c=col: self.cliquer(r, c))
                 button.grid(row=row, column=col, sticky="nsew")
                 button_row.append(button)
             self.buttons.append(button_row)
@@ -71,11 +70,11 @@ class Plateau:
         case.revele = True
         button = self.buttons[x][y]
         if case.mine:
-            button.config(text="BOMBE", bg="red")
+            button.config(text="💣", bg="red")
             for i in range(self.lignes):
                 for j in range(self.colonnes):
                     if self.grille[i][j].mine:
-                        self.buttons[i][j].config(text="BOMBE", bg="red")
+                        self.buttons[i][j].config(text="💣", bg="red")
         else:
             if self.premierCoup:
                 self.premierCoup = False

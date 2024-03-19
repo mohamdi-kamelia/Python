@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from Plateau import Plateau
+from Plateau import *
 class PageAccueil(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -40,7 +40,12 @@ class PageAccueil(tk.Tk):
 
     def demarrer_jeu(self):
         self.destroy()
-        Plateau()
+        choix = ChoixMode()  
+        choix.root.mainloop()
+        if choix.mode:
+            plateau = Plateau(mode=choix.mode)
+        else:
+            messagebox.showerror("Erreur", "Aucun mode de difficulté sélectionné. Le jeu va se fermer.")
 if __name__ == "__main__":
     page_accueil = PageAccueil()
     page_accueil.mainloop()
