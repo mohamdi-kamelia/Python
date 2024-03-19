@@ -4,6 +4,5 @@ class Case:
         self.mine = mine
         self.minesAdjacentes = minesAdjacentes
         self.drapeau = drapeau
-        self.interrogation = interrogation
-        
+        self.interrogation = interrogation       
     
