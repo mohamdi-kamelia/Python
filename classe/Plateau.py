@@ -1,5 +1,6 @@
 from Case import Case
 import random
+import random
 
 class Plateau:
     def __init__(self, lignes, colonnes, mines):
@@ -11,6 +12,8 @@ class Plateau:
     def creerPlateau(self):
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
 
+    def cliquer(self, x, y):
+        coordonnes = []        
     def cliquer(self, x, y):
         coordonnes = []        
         case = self.grille[x][y]
@@ -48,12 +51,24 @@ class Plateau:
                     print(case.minesAdjacentes, end="")
                 elif case.mine:
                     print("*", end="")
+                    print(case.minesAdjacentes, end="")
+                elif case.mine:
+                    print("*", end="")
                 else:
                     print("-", end="")
             print()
     
     def placerMine(self, x, y):
         self.grille[x][y].mine = True
+
+    def placerMines(self):
+        for i in range(self.mines):
+            x = random.randint(0, self.lignes-1)
+            y = random.randint(0, self.colonnes-1)
+            if not self.grille[x][y].mine and not self.grille[x][y].revele:
+                self.placerMine(x, y)
+            else:
+                i -= 1
 
     def placerMines(self):
         for i in range(self.mines):
@@ -70,3 +85,4 @@ if __name__ == "__main__":
     plateau.creerPlateau()
     plateau.cliquer(0, 0)
     plateau.afficher()
+    
