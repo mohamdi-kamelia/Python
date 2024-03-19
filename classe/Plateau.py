@@ -1,19 +1,18 @@
-from Case import Case
+from case import Case
 import random
-import random
+import tkinter as tk
 
 class Plateau:
     def __init__(self, lignes, colonnes, mines):
         self.lignes = lignes
         self.colonnes = colonnes
         self.mines = mines
-        self.premierCoup = True     
+        self.premierCoup = True
 
     def creerPlateau(self):
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
+        self.buttons = []
 
-    def cliquer(self, x, y):
-        coordonnes = []        
     def cliquer(self, x, y):
         coordonnes = []        
         case = self.grille[x][y]
@@ -51,9 +50,6 @@ class Plateau:
                     print(case.minesAdjacentes, end="")
                 elif case.mine:
                     print("*", end="")
-                    print(case.minesAdjacentes, end="")
-                elif case.mine:
-                    print("*", end="")
                 else:
                     print("-", end="")
             print()
@@ -63,21 +59,13 @@ class Plateau:
 
     def placerMines(self):
         for i in range(self.mines):
-            x = random.randint(0, self.lignes-1)
-            y = random.randint(0, self.colonnes-1)
-            if not self.grille[x][y].mine and not self.grille[x][y].revele:
-                self.placerMine(x, y)
-            else:
-                i -= 1
-
-    def placerMines(self):
-        for i in range(self.mines):
-            x = random.randint(0, self.lignes-1)
-            y = random.randint(0, self.colonnes-1)
-            if not self.grille[x][y].mine and not self.grille[x][y].revele:
-                self.placerMine(x, y)
-            else:
-                i -= 1
+            placed = False
+            while not placed:
+                x = random.randint(0, self.lignes - 1)
+                y = random.randint(0, self.colonnes - 1)
+                if not self.grille[x][y].mine and not self.grille[x][y].revele:
+                    self.placerMine(x, y)
+                    placed = True
         
 
 if __name__ == "__main__":
