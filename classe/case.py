@@ -4,5 +4,15 @@ class Case:
         self.mine = mine
         self.minesAdjacentes = minesAdjacentes
         self.drapeau = drapeau
-        self.interrogation = interrogation       
+        self.interrogation = interrogation
+
+    def changerEtat(self):
+        if not self.revele:
+            if self.drapeau:
+                self.drapeau = False
+                self.interrogation = True
+            elif self.interrogation:
+                self.interrogation = False
+            else:
+                self.drapeau = True   
     
