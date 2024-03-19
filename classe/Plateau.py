@@ -5,7 +5,8 @@ class Plateau:
     def __init__(self, lignes, colonnes, mines):
         self.lignes = lignes
         self.colonnes = colonnes
-        self.mines = mines        
+        self.mines = mines
+        self.premierCoup = True     
 
     def creerPlateau(self):
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
@@ -17,6 +18,9 @@ class Plateau:
         if case.mine:
             print("Perdu")
         else:
+            if self.premierCoup:
+                self.premierCoup = False
+                self.placerMines()
             minesAdjacentes = self.verifierVoisins(x, y)
             case.minesAdjacentes = minesAdjacentes
             if minesAdjacentes == 0:
@@ -64,6 +68,5 @@ class Plateau:
 if __name__ == "__main__":
     plateau = Plateau(10, 10, 10)
     plateau.creerPlateau()
-    plateau.placerMines()
     plateau.cliquer(0, 0)
     plateau.afficher()
