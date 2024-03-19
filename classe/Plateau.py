@@ -1,4 +1,4 @@
-from case import Case
+from Case import Case
 import random
 import tkinter as tk
 
