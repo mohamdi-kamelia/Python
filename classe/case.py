@@ -3,3 +3,5 @@ class Case:
         self.revele = revele
         self.mine = mine
         self.minesAdjacentes = minesAdjacentes
+        
+    
