@@ -53,7 +53,8 @@ class PageAccueil(tk.Tk):
     def demarrer_jeu(self):
         self.destroy()
         plateau = Plateau("Facile") 
-         
+        page_accueil = PageAccueil()
+        page_accueil.mainloop()
 if __name__ == "__main__":
     page_accueil = PageAccueil()
     page_accueil.mainloop()
