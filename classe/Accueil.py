@@ -38,17 +38,22 @@ class PageAccueil(tk.Tk):
     def mode_difficultes(self):
         self.destroy()
         plateau = Plateau("Difficile") 
+        page_accueil = PageAccueil()
+        page_accueil.mainloop()
 
     def mode_moyen(self):
         self.destroy()
         plateau = Plateau("Moyen")  
+        page_accueil = PageAccueil()
+        page_accueil.mainloop()
 
     def quitter_jeu(self):
         self.destroy()
 
     def demarrer_jeu(self):
         self.destroy()
-        plateau = Plateau("Facile")  
+        plateau = Plateau("Facile") 
+         
 if __name__ == "__main__":
     page_accueil = PageAccueil()
     page_accueil.mainloop()
