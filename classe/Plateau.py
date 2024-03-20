@@ -6,7 +6,7 @@ from tkinter import messagebox
 class Plateau:
     def __init__(self, difficulte):
         self.difficulte = difficulte
-        self.difficultes = {"Facile": (10,10,12), "Moyen": (15,40,45), "Difficile": (20,70,80)}        
+        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,40,45), "Difficile": (20,70,80)}        
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
         print(self.mines)
@@ -47,6 +47,12 @@ class Plateau:
         self.chronoLabel = tk.Label(self.fenetre, text="0:00", font=("Helvetica", 18, "bold"))
         self.chronoLabel.grid(row=self.lignes+1, column=0, columnspan=self.colonnes, sticky="nsew")
         self.chronoLabel.config(bg="lightgray")
+        self.drapeauxLabel = tk.Label(self.fenetre, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
+        self.drapeauxLabel.grid(row=self.lignes+2, column=0, columnspan=self.colonnes//2, sticky="nsew")
+        self.drapeauxLabel.config(bg="orange")
+        self.interrogationsLabel = tk.Label(self.fenetre, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
+        self.interrogationsLabel.grid(row=self.lignes+2, column=self.colonnes//2, columnspan=self.colonnes//2, sticky="nsew")
+        self.interrogationsLabel.config(bg="yellow")
 
         
 
@@ -61,6 +67,7 @@ class Plateau:
                 for j in range(self.colonnes):
                     if self.grille[i][j].mine:
                         self.boutons[i][j].config(text="💣", bg="red")
+            self.arreterChrono()
             self.defaite()
         else:
             if self.premierCoup:
@@ -124,13 +131,17 @@ class Plateau:
         if case.drapeau:
             bouton.config(text="🚩", bg="orange")
             self.drapeaux += 1
+            self.drapeauxLabel.config(text=f"🚩: {self.drapeaux}")
         elif case.interrogation:
             bouton.config(text="❓", bg="yellow")
             self.drapeaux -= 1
             self.interrogations += 1
+            self.drapeauxLabel.config(text=f"🚩: {self.drapeaux}")
+            self.interrogationsLabel.config(text=f"❓: {self.interrogations}")
         else:
             bouton.config(text="", bg="white")
             self.interrogations -= 1
+            self.interrogationsLabel.config(text=f"❓: {self.interrogations}")
 
     def defaite(self):
         messagebox.showinfo("Perdu", "Vous avez perdu !")
@@ -145,7 +156,7 @@ class Plateau:
     
     def rejouer(self):
         self.fenetre.destroy()
-        plateau = Plateau("Facile")
+        plateau = Plateau(self.difficulte)
 
     def lancerChrono(self):
         self.chrono += 1
@@ -161,4 +172,4 @@ class Plateau:
     
             
 if __name__ == "__main__":
-    plateau = Plateau("Facile")
+    plateau = Plateau("Moyen")
