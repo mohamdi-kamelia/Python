@@ -175,4 +175,4 @@ class Plateau:
     
             
 if __name__ == "__main__":
-    plateau = Plateau("Moyen")
+    plateau = Plateau("Facile")
