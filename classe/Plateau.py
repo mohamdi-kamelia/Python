@@ -1,47 +1,15 @@
 from Case import Case
 import random
 import tkinter as tk
-from tkinter import messagebox
 
-class ChoixMode:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Choix du mode de difficulté")
-        
-        label = tk.Label(self.root, text="Choisissez le mode de difficulté :")
-        label.pack()
-
-        facile_button = tk.Button(self.root, text="Facile", command=lambda: self.choisir_mode("facile"))
-        facile_button.pack()
-
-        moyen_button = tk.Button(self.root, text="Moyen", command=lambda: self.choisir_mode("moyen"))
-        moyen_button.pack()
-
-        difficile_button = tk.Button(self.root, text="Difficile", command=lambda: self.choisir_mode("difficile"))
-        difficile_button.pack()
-
-    def choisir_mode(self, mode):
-        self.mode = mode
-        self.root.destroy()
 
 class Plateau:
-    def __init__(self, lignes=10, colonnes=10, mode="moyen"):
+    def __init__(self, difficulte):
         self.root = tk.Tk()
-        self.mode = mode
-        if self.mode == "facile":
-            self.lignes = 8
-            self.colonnes = 8
-            self.mines = random.randint(5, 15) 
-        elif self.mode == "moyen":
-            self.lignes = 10
-            self.colonnes = 10
-            self.mines = random.randint(15, 25)
-        elif self.mode == "difficile":
-            self.lignes = 12
-            self.colonnes = 12
-            self.mines = random.randint(25, 35) 
-        else:
-            raise ValueError("Mode de difficulté non valide")
+        self.difficulte = difficulte
+        self.difficultes = {"Facile": (10,10,12), "Moyen": (15,40,45), "Difficile": (20,70,80)}        
+        self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
+        self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
         self.premierCoup = True
         self.creerPlateau()
         self.root.mainloop()
@@ -143,12 +111,3 @@ class Plateau:
                 # Place flag
                 button.config(text="🚩", bg="orange")
                 case.drapeau = True
-
-if __name__ == "__main__":
-    choix = ChoixMode()
-    choix.root.mainloop()
-
-    if choix.mode:
-        plateau = Plateau(mode=choix.mode)
-    else:
-        messagebox.showerror("Erreur", "Aucun mode de difficulté sélectionné. Le jeu va se fermer.")
