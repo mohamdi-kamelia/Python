@@ -39,20 +39,23 @@ class Plateau:
                 self.boutons[ligne][colonne].bind("<Button-3>", lambda evenement, r=ligne, c=colonne: self.clicDroit(evenement, r, c))
 
         self.boutonRejouer = tk.Button(self.fenetre, text="Rejouer", command=self.rejouer)
-        self.boutonQuitter = tk.Button(self.fenetre, text="Quitter", command=self.fenetre.quit)
+        self.boutonQuitter = tk.Button(self.fenetre, text="Quitter", command=self.fenetre.destroy)
         self.boutonRejouer.grid(row=self.lignes, column=0, columnspan=self.colonnes//2, sticky="nsew")
         self.boutonQuitter.grid(row=self.lignes, column=self.colonnes//2, columnspan=self.colonnes//2, sticky="nsew")
         self.boutonRejouer.config(bg="green")
         self.boutonQuitter.config(bg="red")
         self.chronoLabel = tk.Label(self.fenetre, text="0:00", font=("Helvetica", 18, "bold"))
         self.chronoLabel.grid(row=self.lignes+1, column=0, columnspan=self.colonnes, sticky="nsew")
-        self.chronoLabel.config(bg="lightgray")
+        self.chronoLabel.config(bg="white")
         self.drapeauxLabel = tk.Label(self.fenetre, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
         self.drapeauxLabel.grid(row=self.lignes+2, column=0, columnspan=self.colonnes//2, sticky="nsew")
         self.drapeauxLabel.config(bg="orange")
         self.interrogationsLabel = tk.Label(self.fenetre, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
         self.interrogationsLabel.grid(row=self.lignes+2, column=self.colonnes//2, columnspan=self.colonnes//2, sticky="nsew")
         self.interrogationsLabel.config(bg="yellow")
+        self.minesLabel = tk.Label(self.fenetre, text=f"💣: {self.mines}", font=("Helvetica", 18, "bold"))
+        self.minesLabel.grid(row=self.lignes+3, column=0, columnspan=self.colonnes, sticky="nsew")
+        self.minesLabel.config(bg="red")
 
         
 
