@@ -63,13 +63,14 @@ class PageAccueil(tk.Tk):
         pseudo = self.pseudo.get()
         self.destroy()
         plateau = Plateau("Facile", pseudo)
-    
+        page_accueil = PageAccueil()
+        page_accueil.mainloop()
+        
     def clear_entry(self, event):
         self.pseudo.delete(0, tk.END)
         self.pseudo.config(fg="black")
         self.pseudo.unbind("<FocusIn>")
-        page_accueil = PageAccueil()
-        page_accueil.mainloop()
+        
 
 if __name__ == "__main__":
     page_accueil = PageAccueil()
