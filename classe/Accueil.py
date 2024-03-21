@@ -65,7 +65,7 @@ class PageAccueil(tk.Tk):
         plateau = Plateau("Facile", pseudo)
         page_accueil = PageAccueil()
         page_accueil.mainloop()
-    
+        
     def clear_entry(self, event):
         self.pseudo.delete(0, tk.END)
         self.pseudo.config(fg="black")

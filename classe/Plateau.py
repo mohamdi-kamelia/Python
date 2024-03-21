@@ -3,6 +3,7 @@ import random
 import tkinter as tk
 from tkinter import messagebox
 import winsound
+import json
 class Plateau:
     def __init__(self, difficulte, pseudo):
         self.difficulte = difficulte
@@ -156,6 +157,7 @@ class Plateau:
             for case in ligne:
                 if not case.mine and not case.revele:
                     return False
+        self.sauvegarder_scores() 
         return True
     
     def rejouer(self):
@@ -171,7 +173,18 @@ class Plateau:
 
     def arreterChrono(self):
         self.fenetre.after_cancel(self.lancerChrono)
-        self.chronoLabel.destroy()   
+        self.chronoLabel.destroy()
+    def sauvegarder_scores(self):
+        score_data = {
+            "pseudo": self.pseudo,
+            "difficulte": self.difficulte,
+            "temps": f"{self.chrono // 60} minutes et {self.chrono % 60} secondes"
+        }
+
+        with open("score.json", "a") as f:
+            json.dump(score_data, f)
+            f.write("\n")
+    
             
 if __name__ == "__main__":
     plateau = Plateau("Facile")
