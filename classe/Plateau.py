@@ -1,4 +1,4 @@
-from case import Case
+from Case import Case
 import random
 import tkinter as tk
 from tkinter import messagebox
@@ -10,16 +10,14 @@ class Plateau:
         self.difficultes = {"Facile": (10,10,12), "Moyen": (14,40,45), "Difficile": (20,70,80)}        
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
-        print(self.mines)
-        self.load_sounds() 
+        self.son_bombe = "images/EXPLReal_Explosion 2 (ID 1808)_LS.wav" 
         self.fenetre = tk.Tk()        
         self.premierCoup = True
         self.drapeaux = 0
         self.interrogations = 0
         self.chrono = 0
         self.creerPlateau()
-        print (self.pseudo)
-        self.fenetre.mainloop()       
+        self.fenetre.mainloop()
         
         
     def creerPlateau(self):
@@ -94,10 +92,8 @@ class Plateau:
             if self.verifierVictoire():
                 self.arreterChrono()
                 messagebox.showinfo("Gagné", f"Vous avez gagné en {self.chrono // 60} minutes et {self.chrono % 60} secondes !")
-                self.fenetre.destroy()                   
-    def load_sounds(self):
-        # Charge le son de la bombe
-        self.bomb_sound = "images/EXPLReal_Explosion 2 (ID 1808)_LS.wav"  
+                self.fenetre.destroy()
+
     def verifierVoisins(self, x, y):
         minesAdjacentes = 0
         coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
@@ -151,7 +147,7 @@ class Plateau:
             self.interrogationsLabel.config(text=f"❓: {self.interrogations}")
 
     def defaite(self):
-        winsound.PlaySound(self.bomb_sound, winsound.SND_FILENAME)
+        winsound.PlaySound(self.son_bombe, winsound.SND_FILENAME)
         messagebox.showinfo("Perdu", "Vous avez perdu !")
         self.fenetre.destroy()
 
@@ -175,9 +171,7 @@ class Plateau:
 
     def arreterChrono(self):
         self.fenetre.after_cancel(self.lancerChrono)
-        self.chronoLabel.destroy()
-
-    
+        self.chronoLabel.destroy()   
             
 if __name__ == "__main__":
     plateau = Plateau("Facile")
