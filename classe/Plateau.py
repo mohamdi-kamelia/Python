@@ -1,8 +1,8 @@
-from Case import Case
+from case import Case
 import random
 import tkinter as tk
 from tkinter import messagebox
-
+import winsound
 class Plateau:
     def __init__(self, difficulte):
         self.difficulte = difficulte
@@ -10,6 +10,7 @@ class Plateau:
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
         print(self.mines)
+        self.load_sounds() 
         self.fenetre = tk.Tk()        
         self.premierCoup = True
         self.drapeaux = 0
@@ -57,7 +58,6 @@ class Plateau:
         self.minesLabel.grid(row=self.lignes+3, column=0, columnspan=self.colonnes, sticky="nsew")
         self.minesLabel.config(bg="red")
 
-        
 
     def cliquer(self, x, y):
         coordonnes = []  
@@ -93,7 +93,9 @@ class Plateau:
                 self.arreterChrono()
                 messagebox.showinfo("Gagné", f"Vous avez gagné en {self.chrono // 60} minutes et {self.chrono % 60} secondes !")
                 self.fenetre.destroy()                   
-        
+    def load_sounds(self):
+        # Charge le son de la bombe
+        self.bomb_sound = "images/EXPLReal_Explosion 2 (ID 1808)_LS.wav"  
     def verifierVoisins(self, x, y):
         minesAdjacentes = 0
         coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
@@ -147,6 +149,7 @@ class Plateau:
             self.interrogationsLabel.config(text=f"❓: {self.interrogations}")
 
     def defaite(self):
+        winsound.PlaySound(self.bomb_sound, winsound.SND_FILENAME)
         messagebox.showinfo("Perdu", "Vous avez perdu !")
         self.fenetre.destroy()
 
