@@ -35,15 +35,22 @@ class PageAccueil(tk.Tk):
         self.bouton_difficultes.place(relx=0.5 ,rely=y_coord + 2 * button_spacing, anchor =tk.CENTER)
         self.bouton_quitter.place(relx=0.5, rely=y_coord + 3 * button_spacing, anchor=tk.CENTER)
         self.bouton_mode_moyen.place(relx=0.5, rely=y_coord + button_spacing, anchor=tk.CENTER)
+        self.pseudo = tk.Entry(self.canvas, font=("Times New Roman", 18, "bold"), fg="black", bg="white")
+        self.pseudo.place(relx=0.5, rely=y_coord - 1 * button_spacing, anchor=tk.CENTER)
+        self.pseudo.insert(0, "Entrez votre pseudo")
+        self.pseudo.bind("<FocusIn>", self.clear_entry)
+
     def mode_difficultes(self):
+        pseudo = self.pseudo.get()
         self.destroy()
-        plateau = Plateau("Difficile") 
+        plateau = Plateau("Difficile", pseudo) 
         page_accueil = PageAccueil()
         page_accueil.mainloop()
 
     def mode_moyen(self):
+        pseudo = self.pseudo.get()
         self.destroy()
-        plateau = Plateau("Moyen")  
+        plateau = Plateau("Moyen", pseudo)  
         page_accueil = PageAccueil()
         page_accueil.mainloop()
 
@@ -51,8 +58,14 @@ class PageAccueil(tk.Tk):
         self.destroy()
 
     def demarrer_jeu(self):
+        pseudo = self.pseudo.get()
         self.destroy()
-        plateau = Plateau("Facile") 
+        plateau = Plateau("Facile", pseudo)
+    
+    def clear_entry(self, event):
+        self.pseudo.delete(0, tk.END)
+        self.pseudo.config(fg="black")
+        self.pseudo.unbind("<FocusIn>")
          
 if __name__ == "__main__":
     page_accueil = PageAccueil()

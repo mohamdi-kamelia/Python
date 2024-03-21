@@ -4,8 +4,9 @@ import tkinter as tk
 from tkinter import messagebox
 
 class Plateau:
-    def __init__(self, difficulte):
+    def __init__(self, difficulte, pseudo):
         self.difficulte = difficulte
+        self.pseudo = pseudo
         self.difficultes = {"Facile": (10,10,12), "Moyen": (14,40,45), "Difficile": (20,70,80)}        
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
@@ -16,7 +17,8 @@ class Plateau:
         self.interrogations = 0
         self.chrono = 0
         self.creerPlateau()
-        self.fenetre.mainloop()
+        print (self.pseudo)
+        self.fenetre.mainloop()       
         
         
     def creerPlateau(self):
