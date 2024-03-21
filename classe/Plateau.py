@@ -180,9 +180,13 @@ class Plateau:
             "difficulte": self.difficulte,
             "temps": f"{self.chrono // 60} minutes et {self.chrono % 60} secondes"
         }
+        with open("score.json", "r") as f:
+            scores = json.load(f)
+        
+        scores.append(score_data)
 
-        with open("score.json", "a") as f:
-            json.dump(score_data, f)
+        with open("score.json", "w") as f:
+            json.dump(scores, f)
             f.write("\n")
     
             
