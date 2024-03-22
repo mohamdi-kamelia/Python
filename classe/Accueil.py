@@ -1,6 +1,8 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from Plateau import *
+import json
+from tkinter import messagebox
 
 class PageAccueil(tk.Tk):
     def __init__(self):
@@ -37,6 +39,14 @@ class PageAccueil(tk.Tk):
         self.bouton_difficultes.place(relx=0.5, rely=y_coord + 2 * button_spacing, anchor=tk.CENTER)
         self.bouton_quitter.place(relx=0.5, rely=y_coord + 3 * button_spacing, anchor=tk.CENTER)
 
+        # Ajouter un bouton pour afficher les scores
+        self.image_scores = Image.open("images/score.png")  # Modifier le chemin d'accès à votre image
+        self.image_scores = self.image_scores.resize((80, 50), Image.LANCZOS)
+        self.image_scores = ImageTk.PhotoImage(self.image_scores)
+        self.bouton_scores = tk.Button(self.canvas, image=self.image_scores, command=self.afficher_scores)
+        self.bouton_scores.place(relx=1.0, rely=1.0, anchor=tk.SE)
+
+        # Entrée pour le pseudo
         self.pseudo = tk.Entry(self.canvas, font=("Times New Roman", 18, "bold"), fg="black", bg="white")
         self.pseudo.place(relx=0.5, rely=y_coord - 1 * button_spacing, anchor=tk.CENTER)
         self.pseudo.insert(0, "Entrez votre pseudo")
@@ -71,8 +81,25 @@ class PageAccueil(tk.Tk):
         self.pseudo.config(fg="black")
         self.pseudo.unbind("<FocusIn>")
         
+    def afficher_scores(self):
+        # Charge les scores à partir du fichier JSON
+        try:
+            with open("scores.json", "r") as file:
+                scores = json.load(file)
+        except FileNotFoundError:
+            # Si le fichier n'existe pas encore
+            messagebox.showinfo("Scores", "Aucun score enregistré.")
+            return
+
+        # Affiche les scores dans une boîte de dialogue
+        score_text = "Scores :\n"
+        for score in scores:
+            pseudo = score["pseudo"]
+            temps = score["temps"]
+            score_text += f"{pseudo}: {temps}\n"
+
+        messagebox.showinfo("Scores", score_text)
 
 if __name__ == "__main__":
     page_accueil = PageAccueil()
     page_accueil.mainloop()
-

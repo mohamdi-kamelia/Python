@@ -22,42 +22,68 @@ class Plateau:
         
         
     def creerPlateau(self):
+        # Création d'un frame principal avec fond noir
+        self.main_frame = tk.Frame(self.fenetre, bg="white")
+        self.main_frame.pack(expand=True, fill="both", padx=10, pady=10)
+
+        # Création de cadres noirs pour entourer la grille
+        left_side_frame = tk.Frame(self.main_frame, bg="black")
+        left_side_frame.grid(row=0, column=0, rowspan=self.lignes, sticky="nsew")
+
+        right_side_frame = tk.Frame(self.main_frame, bg="black")
+        right_side_frame.grid(row=0, column=self.colonnes + 1, rowspan=self.lignes, sticky="nsew")
+
+        top_frame = tk.Frame(self.main_frame, bg="black")  # Changement ici
+        top_frame.grid(row=0, column=0, columnspan=self.colonnes + 2, sticky="nsew")
+
+
+        # Création de la grille
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
         self.boutons = []
 
         for ligne in range(self.lignes):
             ligne_boutons = []
             for colonne in range(self.colonnes):
-                bouton = tk.Button(self.fenetre, width=6, height=3,bg="white", command=lambda r=ligne, c=colonne: self.cliquer(r, c))
-                bouton.grid(row=ligne, column=colonne, sticky="nsew")
+                bouton = tk.Button(self.main_frame, width=6, height=3,bg="white", command=lambda r=ligne, c=colonne: self.cliquer(r, c))
+                bouton.grid(row=ligne, column=colonne + 1, sticky="nsew")  # Changement de la colonne
                 ligne_boutons.append(bouton)
             self.boutons.append(ligne_boutons)
-        for i in range(self.lignes):
-            self.fenetre.grid_rowconfigure(i, weight=1)
-        for i in range(self.colonnes):
-            self.fenetre.grid_columnconfigure(i, weight=1)
+
+        for ligne in range(self.lignes):
+            self.main_frame.grid_rowconfigure(ligne, weight=1)
+
+        for colonne in range(self.colonnes):
+            self.main_frame.grid_columnconfigure(colonne + 1, weight=1)  # Changement de la colonne
+
         for ligne in range(self.lignes):
             for colonne in range(self.colonnes):
                 self.boutons[ligne][colonne].bind("<Button-3>", lambda evenement, r=ligne, c=colonne: self.clicDroit(evenement, r, c))
 
-        self.boutonRejouer = tk.Button(self.fenetre, text="Rejouer", command=self.rejouer)
-        self.boutonQuitter = tk.Button(self.fenetre, text="Quitter", command=self.fenetre.destroy)
-        self.boutonRejouer.grid(row=self.lignes, column=0, columnspan=self.colonnes//2, sticky="nsew")
-        self.boutonQuitter.grid(row=self.lignes, column=self.colonnes//2, columnspan=self.colonnes//2, sticky="nsew")
-        self.boutonRejouer.config(bg="green")
-        self.boutonQuitter.config(bg="red")
-        self.chronoLabel = tk.Label(self.fenetre, text="0:00", font=("Helvetica", 18, "bold"))
-        self.chronoLabel.grid(row=self.lignes+1, column=0, columnspan=self.colonnes, sticky="nsew")
+        # Création d'un frame pour les boutons en bas
+        bottom_frame = tk.Frame(self.main_frame, bg="white")
+        bottom_frame.grid(row=self.lignes, column=0, columnspan=self.colonnes + 2, sticky="nsew")
+
+        self.boutonRejouer = tk.Button(bottom_frame, text="🙂", command=self.rejouer, font=("Helvetica", 24))
+        self.boutonRejouer.place(relx=0.5, rely=0.5, anchor="center")
+        self.boutonRejouer.config(bg="white")
+        self.boutonRejouer.config(width=6, height=3) 
+
+        self.chronoLabel = tk.Label(bottom_frame, text="0:00", font=("Helvetica", 18, "bold"))
+        self.chronoLabel.pack(side=tk.LEFT, padx=5, pady=5)
         self.chronoLabel.config(bg="white")
-        self.drapeauxLabel = tk.Label(self.fenetre, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
-        self.drapeauxLabel.grid(row=self.lignes+2, column=0, columnspan=self.colonnes//2, sticky="nsew")
-        self.drapeauxLabel.config(bg="orange")
-        self.interrogationsLabel = tk.Label(self.fenetre, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
-        self.interrogationsLabel.grid(row=self.lignes+2, column=self.colonnes//2, columnspan=self.colonnes//2, sticky="nsew")
-        self.interrogationsLabel.config(bg="yellow")
-        self.minesLabel = tk.Label(self.fenetre, text=f"💣: {self.mines}", font=("Helvetica", 18, "bold"))
-        self.minesLabel.grid(row=self.lignes+3, column=0, columnspan=self.colonnes, sticky="nsew")
+
+        self.drapeauxLabel = tk.Label(bottom_frame, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
+        self.drapeauxLabel.place(relx=0.8, rely=0.5, anchor="w") 
+        self.drapeauxLabel.config(bg="gray")
+
+        self.interrogationsLabel = tk.Label(bottom_frame, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
+        self.interrogationsLabel.place(relx=0.73, rely=0.5, anchor="w") 
+        self.interrogationsLabel.config(bg="gray")
+
+        self.minesLabel = tk.Label(bottom_frame, text=f"💣: {self.mines}", font=("Helvetica", 18, "bold"))
+        self.minesLabel.pack(side=tk.LEFT, padx=5, pady=5)
         self.minesLabel.config(bg="red")
+
 
 
     def cliquer(self, x, y):
@@ -180,9 +206,13 @@ class Plateau:
             "difficulte": self.difficulte,
             "temps": f"{self.chrono // 60} minutes et {self.chrono % 60} secondes"
         }
+        with open("scores.json", "r") as f:
+            scores = json.load(f)
+        
+        scores.append(score_data)
 
-        with open("score.json", "a") as f:
-            json.dump(score_data, f)
+        with open("scores.json", "w") as f:
+            json.dump(scores, f)
             f.write("\n")
     
             
