@@ -8,7 +8,7 @@ class Plateau:
     def __init__(self, difficulte, pseudo):
         self.difficulte = difficulte
         self.pseudo = pseudo
-        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,40,45), "Difficile": (20,70,80)}        
+        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,20,25), "Difficile": (20,40,60)}        
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
         self.son_bombe = "images/EXPLReal_Explosion 2 (ID 1808)_LS.wav" 
