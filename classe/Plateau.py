@@ -154,21 +154,22 @@ class Plateau:
         case = self.grille[x][y]
         bouton = self.boutons[x][y]
 
-        case.changer_etat()
-        if case.drapeau:
-            bouton.config(text="🚩", bg="orange")
-            self.drapeaux += 1
-            self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
-        elif case.interrogation:
-            bouton.config(text="❓", bg="yellow")
-            self.drapeaux -= 1
-            self.interrogations += 1
-            self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
-            self.interrogations_label.config(text=f"❓: {self.interrogations}")
-        else:
-            bouton.config(text="", bg="white")
-            self.interrogations -= 1
-            self.interrogations_label.config(text=f"❓: {self.interrogations}")
+        if not case.revele:
+            case.changer_etat()
+            if case.drapeau:
+                bouton.config(text="🚩", bg="orange")
+                self.drapeaux += 1
+                self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
+            elif case.interrogation:
+                bouton.config(text="❓", bg="yellow")
+                self.drapeaux -= 1
+                self.interrogations += 1
+                self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
+                self.interrogations_label.config(text=f"❓: {self.interrogations}")
+            else:
+                bouton.config(text="", bg="white")
+                self.interrogations -= 1
+                self.interrogations_label.config(text=f"❓: {self.interrogations}")
 
     def defaite(self):
         winsound.PlaySound(self.son_bombe, winsound.SND_FILENAME)
