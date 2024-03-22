@@ -8,33 +8,33 @@ class Plateau:
     def __init__(self, difficulte, pseudo):
         self.difficulte = difficulte
         self.pseudo = pseudo
-        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,40,45), "Difficile": (20,70,80)}        
+        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,20,25), "Difficile": (20,40,60)}        
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
         self.son_bombe = "images/EXPLReal_Explosion 2 (ID 1808)_LS.wav" 
         self.fenetre = tk.Tk()        
-        self.premierCoup = True
+        self.premier_coup = True
         self.drapeaux = 0
         self.interrogations = 0
         self.chrono = 0
-        self.creerPlateau()
+        self.creer_plateau()
         self.fenetre.mainloop()
         
         
-    def creerPlateau(self):
+    def creer_plateau(self):
         # Création d'un frame principal avec fond noir
-        self.main_frame = tk.Frame(self.fenetre, bg="white")
-        self.main_frame.pack(expand=True, fill="both", padx=10, pady=10)
+        self.cadre_principal = tk.Frame(self.fenetre, bg="white")
+        self.cadre_principal.pack(expand=True, fill="both", padx=10, pady=10)
 
         # Création de cadres noirs pour entourer la grille
-        left_side_frame = tk.Frame(self.main_frame, bg="black")
-        left_side_frame.grid(row=0, column=0, rowspan=self.lignes, sticky="nsew")
+        cadre_gauche = tk.Frame(self.cadre_principal, bg="black")
+        cadre_gauche.grid(row=0, column=0, rowspan=self.lignes, sticky="nsew")
 
-        right_side_frame = tk.Frame(self.main_frame, bg="black")
-        right_side_frame.grid(row=0, column=self.colonnes + 1, rowspan=self.lignes, sticky="nsew")
+        cadre_droit = tk.Frame(self.cadre_principal, bg="black")
+        cadre_droit.grid(row=0, column=self.colonnes + 1, rowspan=self.lignes, sticky="nsew")
 
-        top_frame = tk.Frame(self.main_frame, bg="black")  # Changement ici
-        top_frame.grid(row=0, column=0, columnspan=self.colonnes + 2, sticky="nsew")
+        cadre_haut = tk.Frame(self.cadre_principal, bg="black")  # Changement ici
+        cadre_haut.grid(row=0, column=0, columnspan=self.colonnes + 2, sticky="nsew")
 
 
         # Création de la grille
@@ -44,45 +44,45 @@ class Plateau:
         for ligne in range(self.lignes):
             ligne_boutons = []
             for colonne in range(self.colonnes):
-                bouton = tk.Button(self.main_frame, width=6, height=3,bg="white", command=lambda r=ligne, c=colonne: self.cliquer(r, c))
+                bouton = tk.Button(self.cadre_principal, width=6, height=3,bg="white", command=lambda r=ligne, c=colonne: self.cliquer(r, c))
                 bouton.grid(row=ligne, column=colonne + 1, sticky="nsew")  # Changement de la colonne
                 ligne_boutons.append(bouton)
             self.boutons.append(ligne_boutons)
 
         for ligne in range(self.lignes):
-            self.main_frame.grid_rowconfigure(ligne, weight=1)
+            self.cadre_principal.grid_rowconfigure(ligne, weight=1)
 
         for colonne in range(self.colonnes):
-            self.main_frame.grid_columnconfigure(colonne + 1, weight=1)  # Changement de la colonne
+            self.cadre_principal.grid_columnconfigure(colonne + 1, weight=1)  # Changement de la colonne
 
         for ligne in range(self.lignes):
             for colonne in range(self.colonnes):
-                self.boutons[ligne][colonne].bind("<Button-3>", lambda evenement, r=ligne, c=colonne: self.clicDroit(evenement, r, c))
+                self.boutons[ligne][colonne].bind("<Button-3>", lambda evenement, r=ligne, c=colonne: self.clic_droit(evenement, r, c))
 
         # Création d'un frame pour les boutons en bas
-        bottom_frame = tk.Frame(self.main_frame, bg="white")
-        bottom_frame.grid(row=self.lignes, column=0, columnspan=self.colonnes + 2, sticky="nsew")
+        cadre_bas = tk.Frame(self.cadre_principal, bg="white")
+        cadre_bas.grid(row=self.lignes, column=0, columnspan=self.colonnes + 2, sticky="nsew")
 
-        self.boutonRejouer = tk.Button(bottom_frame, text="🙂", command=self.rejouer, font=("Helvetica", 24))
-        self.boutonRejouer.place(relx=0.5, rely=0.5, anchor="center")
-        self.boutonRejouer.config(bg="white")
-        self.boutonRejouer.config(width=6, height=3) 
+        self.bouton_rejouer = tk.Button(cadre_bas, text="🙂", command=self.rejouer, font=("Helvetica", 24))
+        self.bouton_rejouer.place(relx=0.5, rely=0.5, anchor="center")
+        self.bouton_rejouer.config(bg="white")
+        self.bouton_rejouer.config(width=6, height=3) 
 
-        self.chronoLabel = tk.Label(bottom_frame, text="0:00", font=("Helvetica", 18, "bold"))
-        self.chronoLabel.pack(side=tk.LEFT, padx=5, pady=5)
-        self.chronoLabel.config(bg="white")
+        self.chrono_label = tk.Label(cadre_bas, text="0:00", font=("Helvetica", 18, "bold"))
+        self.chrono_label.pack(side=tk.LEFT, padx=5, pady=5)
+        self.chrono_label.config(bg="white")
 
-        self.drapeauxLabel = tk.Label(bottom_frame, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
-        self.drapeauxLabel.place(relx=0.8, rely=0.5, anchor="w") 
-        self.drapeauxLabel.config(bg="gray")
+        self.drapeaux_label = tk.Label(cadre_bas, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
+        self.drapeaux_label.place(relx=0.8, rely=0.5, anchor="w") 
+        self.drapeaux_label.config(bg="gray")
 
-        self.interrogationsLabel = tk.Label(bottom_frame, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
-        self.interrogationsLabel.place(relx=0.73, rely=0.5, anchor="w") 
-        self.interrogationsLabel.config(bg="gray")
+        self.interrogations_label = tk.Label(cadre_bas, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
+        self.interrogations_label.place(relx=0.73, rely=0.5, anchor="w") 
+        self.interrogations_label.config(bg="gray")
 
-        self.minesLabel = tk.Label(bottom_frame, text=f"💣: {self.mines}", font=("Helvetica", 18, "bold"))
-        self.minesLabel.pack(side=tk.LEFT, padx=5, pady=5)
-        self.minesLabel.config(bg="red")
+        self.mines_label = tk.Label(cadre_bas, text=f"💣: {self.mines}", font=("Helvetica", 18, "bold"))
+        self.mines_label.pack(side=tk.LEFT, padx=5, pady=5)
+        self.mines_label.config(bg="red")
 
 
 
@@ -97,16 +97,16 @@ class Plateau:
                 for j in range(self.colonnes):
                     if self.grille[i][j].mine:
                         self.boutons[i][j].config(text="💣", bg="red")
-            self.arreterChrono()
+            self.arreter_chrono()
             self.defaite()
         else:
-            if self.premierCoup:
-                self.premierCoup = False
-                self.placerMines()
+            if self.premier_coup:
+                self.premier_coup = False
+                self.placer_mines()
                 self.afficher()
-                self.lancerChrono()
-            minesAdjacentes = self.verifierVoisins(x, y)
-            if minesAdjacentes == 0:
+                self.lancer_chrono()
+            mines_adjacentes = self.verifier_voisins(x, y)
+            if mines_adjacentes == 0:
                 bouton.config(text="", bg="lightgray")
                 coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
                 for coordonne in coordonnes:
@@ -114,22 +114,22 @@ class Plateau:
                         case = self.grille[coordonne[0]][coordonne[1]]
                         if not case.revele:
                             self.cliquer(coordonne[0], coordonne[1])
-            elif minesAdjacentes > 0:
-                bouton.config(text=minesAdjacentes, bg="gray")
-            if self.verifierVictoire():
-                self.arreterChrono()
+            elif mines_adjacentes > 0:
+                bouton.config(text=mines_adjacentes, bg="gray")
+            if self.verifier_victoire():
+                self.arreter_chrono()
                 messagebox.showinfo("Gagné", f"Vous avez gagné en {self.chrono // 60} minutes et {self.chrono % 60} secondes !")
                 self.fenetre.destroy()
 
-    def verifierVoisins(self, x, y):
-        minesAdjacentes = 0
+    def verifier_voisins(self, x, y):
+        mines_adjacentes = 0
         coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
         for coordonne in coordonnes:
             if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
                 case = self.grille[coordonne[0]][coordonne[1]]
                 if case.mine:
-                    minesAdjacentes += 1
-        return minesAdjacentes
+                    mines_adjacentes += 1
+        return mines_adjacentes
 
     def afficher(self):
         for ligne in self.grille:
@@ -139,46 +139,43 @@ class Plateau:
                 else:
                     print("-", end=" ")
             print()
-    
-    def placerMine(self, x, y):
-        self.grille[x][y].mine = True
 
-    def placerMines(self):
+    def placer_mines(self):
         for i in range(self.mines):
             place = False
             while not place:
                 x = random.randint(0, self.lignes - 1)
                 y = random.randint(0, self.colonnes - 1)
                 if not self.grille[x][y].mine and not self.grille[x][y].revele:
-                    self.placerMine(x, y)
+                    self.grille[x][y].mine = True
                     place = True
     
-    def clicDroit(self, evenement, x, y):
+    def clic_droit(self, evenement, x, y):
         case = self.grille[x][y]
         bouton = self.boutons[x][y]
 
-        case.changerEtat()
+        case.changer_etat()
         if case.drapeau:
             bouton.config(text="🚩", bg="orange")
             self.drapeaux += 1
-            self.drapeauxLabel.config(text=f"🚩: {self.drapeaux}")
+            self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
         elif case.interrogation:
             bouton.config(text="❓", bg="yellow")
             self.drapeaux -= 1
             self.interrogations += 1
-            self.drapeauxLabel.config(text=f"🚩: {self.drapeaux}")
-            self.interrogationsLabel.config(text=f"❓: {self.interrogations}")
+            self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
+            self.interrogations_label.config(text=f"❓: {self.interrogations}")
         else:
             bouton.config(text="", bg="white")
             self.interrogations -= 1
-            self.interrogationsLabel.config(text=f"❓: {self.interrogations}")
+            self.interrogations_label.config(text=f"❓: {self.interrogations}")
 
     def defaite(self):
         winsound.PlaySound(self.son_bombe, winsound.SND_FILENAME)
         messagebox.showinfo("Perdu", "Vous avez perdu !")
         self.fenetre.destroy()
 
-    def verifierVictoire(self):
+    def verifier_victoire(self):
         for ligne in self.grille:
             for case in ligne:
                 if not case.mine and not case.revele:
@@ -190,16 +187,17 @@ class Plateau:
         self.fenetre.destroy()
         plateau = Plateau(self.difficulte)
 
-    def lancerChrono(self):
+    def lancer_chrono(self):
         self.chrono += 1
         minutes = self.chrono // 60
-        seconds = self.chrono % 60
-        self.chronoLabel.config(text=f"{minutes:02d}:{seconds:02d}")
-        self.fenetre.after(1000, self.lancerChrono)
+        secondes = self.chrono % 60
+        self.chrono_label.config(text=f"{minutes:02d}:{secondes:02d}")
+        self.fenetre.after(1000, self.lancer_chrono)
 
-    def arreterChrono(self):
-        self.fenetre.after_cancel(self.lancerChrono)
-        self.chronoLabel.destroy()
+    def arreter_chrono(self):
+        self.fenetre.after_cancel(self.lancer_chrono)
+        self.chrono_label.destroy()
+
     def sauvegarder_scores(self):
         score_data = {
             "pseudo": self.pseudo,

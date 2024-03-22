@@ -1,10 +1,11 @@
+# Importation des modules nécessaires
 import tkinter as tk
-from PIL import Image, ImageTk
-from Plateau import *
-import json
 from tkinter import messagebox
+from PIL import Image, ImageTk
+from Plateau import *  # Supposons que Plateau soit un module que vous avez créé pour votre jeu
+import json
 
-class PageAccueil(tk.Tk):
+class Page_Accueil(tk.Tk):
     def __init__(self):
         super().__init__()
 
@@ -26,6 +27,10 @@ class PageAccueil(tk.Tk):
         # Positionnement des boutons
         y_coord = 0.45
         button_spacing = 0.12
+
+        # Bouton pour les instructions
+        self.bouton_aide = tk.Button(self.canvas, text="?", command=self.afficher_instructions, font=("Times New Roman", 18, "italic bold"), fg="white", bg="black")
+        self.bouton_aide.place(relx=0.5, rely=y_coord - 0.5 * button_spacing, anchor=tk.CENTER)
 
         # Boutons pour les niveaux de difficulté
         self.bouton_demarrer = tk.Button(self.canvas, text="Mode Facile", command=self.demarrer_jeu, font=("Times New Roman", 18, "italic bold"), fg="white", bg="black")
@@ -56,14 +61,14 @@ class PageAccueil(tk.Tk):
         pseudo = self.pseudo.get()
         self.destroy()
         plateau = Plateau("Difficile", pseudo) 
-        page_accueil = PageAccueil()
+        page_accueil = Page_Accueil()
         page_accueil.mainloop()
 
     def mode_moyen(self):
         pseudo = self.pseudo.get()
         self.destroy()
         plateau = Plateau("Moyen", pseudo)  
-        page_accueil = PageAccueil()
+        page_accueil = Page_Accueil()
         page_accueil.mainloop()
 
     def quitter_jeu(self):
@@ -73,7 +78,7 @@ class PageAccueil(tk.Tk):
         pseudo = self.pseudo.get()
         self.destroy()
         plateau = Plateau("Facile", pseudo)
-        page_accueil = PageAccueil()
+        page_accueil = Page_Accueil()
         page_accueil.mainloop()
         
     def clear_entry(self, event):
@@ -99,7 +104,12 @@ class PageAccueil(tk.Tk):
             score_text += f"{pseudo}: {temps}\n"
 
         messagebox.showinfo("Scores", score_text)
+        
+    def afficher_instructions(self):
+        # Ici, vous pouvez définir le contenu des instructions et les afficher dans une boîte de dialogue
+        instructions = "Instructions du jeu Démineur :\n\n1. Cliquez sur une case pour révéler ce qu'elle cache.\n2. Si vous trouvez une mine, le jeu est terminé.\n3. Utilisez les chiffres pour déterminer où sont les mines.\n4. Marquez les mines avec des drapeaux pour éviter de les cliquer accidentellement.\n5. Marquez toutes les mines pour gagner le jeu."
+        messagebox.showinfo("Instructions", instructions)
 
 if __name__ == "__main__":
-    page_accueil = PageAccueil()
+    page_accueil = Page_Accueil()
     page_accueil.mainloop()
