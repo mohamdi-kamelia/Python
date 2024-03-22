@@ -89,37 +89,38 @@ class Plateau:
     def cliquer(self, x, y):
         coordonnes = []  
         case = self.grille[x][y]
-        case.revele = True
-        bouton = self.boutons[x][y]
-        if case.mine:
-            bouton.config(text="💣", bg="red")
-            for i in range(self.lignes):
-                for j in range(self.colonnes):
-                    if self.grille[i][j].mine:
-                        self.boutons[i][j].config(text="💣", bg="red")
-            self.arreter_chrono()
-            self.defaite()
-        else:
-            if self.premier_coup:
-                self.premier_coup = False
-                self.placer_mines()
-                self.afficher()
-                self.lancer_chrono()
-            mines_adjacentes = self.verifier_voisins(x, y)
-            if mines_adjacentes == 0:
-                bouton.config(text="", bg="lightgray")
-                coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
-                for coordonne in coordonnes:
-                    if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
-                        case = self.grille[coordonne[0]][coordonne[1]]
-                        if not case.revele:
-                            self.cliquer(coordonne[0], coordonne[1])
-            elif mines_adjacentes > 0:
-                bouton.config(text=mines_adjacentes, bg="gray")
-            if self.verifier_victoire():
+        if not case.drapeau:
+            case.revele = True
+            bouton = self.boutons[x][y]
+            if case.mine:
+                bouton.config(text="💣", bg="red")
+                for i in range(self.lignes):
+                    for j in range(self.colonnes):
+                        if self.grille[i][j].mine:
+                            self.boutons[i][j].config(text="💣", bg="red")
                 self.arreter_chrono()
-                messagebox.showinfo("Gagné", f"Vous avez gagné en {self.chrono // 60} minutes et {self.chrono % 60} secondes !")
-                self.fenetre.destroy()
+                self.defaite()
+            else:
+                if self.premier_coup:
+                    self.premier_coup = False
+                    self.placer_mines()
+                    self.afficher()
+                    self.lancer_chrono()
+                mines_adjacentes = self.verifier_voisins(x, y)
+                if mines_adjacentes == 0:
+                    bouton.config(text="", bg="lightgray")
+                    coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
+                    for coordonne in coordonnes:
+                        if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
+                            case = self.grille[coordonne[0]][coordonne[1]]
+                            if not case.revele:
+                                self.cliquer(coordonne[0], coordonne[1])
+                elif mines_adjacentes > 0:
+                    bouton.config(text=mines_adjacentes, bg="gray")
+                if self.verifier_victoire():
+                    self.arreter_chrono()
+                    messagebox.showinfo("Gagné", f"Vous avez gagné en {self.chrono // 60} minutes et {self.chrono % 60} secondes !")
+                    self.fenetre.destroy()
 
     def verifier_voisins(self, x, y):
         mines_adjacentes = 0
@@ -154,21 +155,22 @@ class Plateau:
         case = self.grille[x][y]
         bouton = self.boutons[x][y]
 
-        case.changer_etat()
-        if case.drapeau:
-            bouton.config(text="🚩", bg="orange")
-            self.drapeaux += 1
-            self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
-        elif case.interrogation:
-            bouton.config(text="❓", bg="yellow")
-            self.drapeaux -= 1
-            self.interrogations += 1
-            self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
-            self.interrogations_label.config(text=f"❓: {self.interrogations}")
-        else:
-            bouton.config(text="", bg="white")
-            self.interrogations -= 1
-            self.interrogations_label.config(text=f"❓: {self.interrogations}")
+        if not case.revele:
+            case.changer_etat()
+            if case.drapeau:
+                bouton.config(text="🚩", bg="orange")
+                self.drapeaux += 1
+                self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
+            elif case.interrogation:
+                bouton.config(text="❓", bg="yellow")
+                self.drapeaux -= 1
+                self.interrogations += 1
+                self.drapeaux_label.config(text=f"🚩: {self.drapeaux}")
+                self.interrogations_label.config(text=f"❓: {self.interrogations}")
+            else:
+                bouton.config(text="", bg="white")
+                self.interrogations -= 1
+                self.interrogations_label.config(text=f"❓: {self.interrogations}")
 
     def defaite(self):
         winsound.PlaySound(self.son_bombe, winsound.SND_FILENAME)
