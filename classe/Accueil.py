@@ -29,8 +29,12 @@ class Page_Accueil(tk.Tk):
         button_spacing = 0.12
 
         # Bouton pour les instructions
-        self.bouton_aide = tk.Button(self.canvas, text="?", command=self.afficher_instructions, font=("Times New Roman", 18, "italic bold"), fg="white", bg="black")
-        self.bouton_aide.place(relx=0.5, rely=y_coord - 0.5 * button_spacing, anchor=tk.CENTER)
+        self.image_question = Image.open("images/instruction.png")
+        self.image_question = self.image_question.resize((50, 50), Image.LANCZOS) 
+        self.image_question = ImageTk.PhotoImage(self.image_question)
+
+        self.bouton_aide = tk.Button(self.canvas, image=self.image_question, command=self.afficher_instructions, bg="black", bd=0)
+        self.bouton_aide.place(relx=0.01, rely=0.99, anchor=tk.SW)
 
         # Boutons pour les niveaux de difficulté
         self.bouton_demarrer = tk.Button(self.canvas, text="Mode Facile", command=self.demarrer_jeu, font=("Times New Roman", 18, "italic bold"), fg="white", bg="black")
@@ -45,7 +49,7 @@ class Page_Accueil(tk.Tk):
         self.bouton_quitter.place(relx=0.5, rely=y_coord + 3 * button_spacing, anchor=tk.CENTER)
 
         # Ajouter un bouton pour afficher les scores
-        self.image_scores = Image.open("images/score.png")  # Modifier le chemin d'accès à votre image
+        self.image_scores = Image.open("images/téléchargement.jpg")  # Modifier le chemin d'accès à votre image
         self.image_scores = self.image_scores.resize((80, 50), Image.LANCZOS)
         self.image_scores = ImageTk.PhotoImage(self.image_scores)
         self.bouton_scores = tk.Button(self.canvas, image=self.image_scores, command=self.afficher_scores)
@@ -109,7 +113,6 @@ class Page_Accueil(tk.Tk):
         # Ici, vous pouvez définir le contenu des instructions et les afficher dans une boîte de dialogue
         instructions = "Instructions du jeu Démineur :\n\n1. Cliquez sur une case pour révéler ce qu'elle cache.\n2. Si vous trouvez une mine, le jeu est terminé.\n3. Utilisez les chiffres pour déterminer où sont les mines.\n4. Marquez les mines avec des drapeaux pour éviter de les cliquer accidentellement.\n5. Marquez toutes les mines pour gagner le jeu."
         messagebox.showinfo("Instructions", instructions)
-
 if __name__ == "__main__":
     page_accueil = Page_Accueil()
     page_accueil.mainloop()

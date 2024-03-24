@@ -60,28 +60,29 @@ class Plateau:
                 self.boutons[ligne][colonne].bind("<Button-3>", lambda evenement, r=ligne, c=colonne: self.clic_droit(evenement, r, c))
 
         # Création d'un frame pour les boutons en bas
-        cadre_bas = tk.Frame(self.cadre_principal, bg="white")
+        cadre_bas = tk.Frame(self.cadre_principal, bg="black")
         cadre_bas.grid(row=self.lignes, column=0, columnspan=self.colonnes + 2, sticky="nsew")
 
-        self.bouton_rejouer = tk.Button(cadre_bas, text="🙂", command=self.rejouer, font=("Helvetica", 24))
+        self.bouton_rejouer = tk.Button(cadre_bas, text="Rejouer", command=self.rejouer, font=("Times New Roman", 20))
         self.bouton_rejouer.place(relx=0.5, rely=0.5, anchor="center")
-        self.bouton_rejouer.config(bg="white")
+        self.bouton_rejouer.config(bg="grey")
         self.bouton_rejouer.config(width=6, height=3) 
 
         self.chrono_label = tk.Label(cadre_bas, text="0:00", font=("Helvetica", 18, "bold"))
         self.chrono_label.pack(side=tk.LEFT, padx=5, pady=5)
-        self.chrono_label.config(bg="white")
+        self.chrono_label.config(bg="red")
 
+            
         self.drapeaux_label = tk.Label(cadre_bas, text=f"🚩: {self.drapeaux}", font=("Helvetica", 18, "bold"))
-        self.drapeaux_label.place(relx=0.8, rely=0.5, anchor="w") 
+        self.drapeaux_label.place(relx=0.4, rely=0.5, anchor="center")
         self.drapeaux_label.config(bg="gray")
 
         self.interrogations_label = tk.Label(cadre_bas, text=f"❓: {self.interrogations}", font=("Helvetica", 18, "bold"))
-        self.interrogations_label.place(relx=0.73, rely=0.5, anchor="w") 
+        self.interrogations_label.place(relx=0.6, rely=0.5, anchor="center")
         self.interrogations_label.config(bg="gray")
 
         self.mines_label = tk.Label(cadre_bas, text=f"💣: {self.mines}", font=("Helvetica", 18, "bold"))
-        self.mines_label.pack(side=tk.LEFT, padx=5, pady=5)
+        self.mines_label.place(relx=0.97, rely=0.5, anchor="center")
         self.mines_label.config(bg="red")
 
 
