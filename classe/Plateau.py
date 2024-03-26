@@ -8,11 +8,12 @@ class Plateau:
     def __init__(self, difficulte, pseudo):
         self.difficulte = difficulte
         self.pseudo = pseudo
-        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,20,25), "Difficile": (20,40,60)}        
+        self.difficultes = {"Facile": (10,10,12), "Moyen": (14,20,25), "Difficile": (20,40,60)} # Dictionnaire des difficultés (lignes+colonnes, mines_min, mines_max)
         self.lignes, self.colonnes = self.difficultes[difficulte][0], self.difficultes[difficulte][0]
         self.mines = random.randint(self.difficultes[difficulte][1], self.difficultes[difficulte][2])
         self.son_bombe = "images/EXPLReal_Explosion 2 (ID 1808)_LS.wav" 
-        self.fenetre = tk.Tk()        
+        self.fenetre = tk.Tk()
+        # initialisation du nombres de drapeaux, points d'interrogation, bombes et du chrono ainsi que de la variable premier_coup qui n'est True que lors de la première action du joueur        
         self.premier_coup = True
         self.drapeaux = 0
         self.interrogations = 0
@@ -41,6 +42,7 @@ class Plateau:
         self.grille = [[Case() for i in range(self.colonnes)] for j in range(self.lignes)]
         self.boutons = []
 
+        # Création des boutons associés à chaque case
         for ligne in range(self.lignes):
             ligne_boutons = []
             for colonne in range(self.colonnes):
@@ -55,6 +57,7 @@ class Plateau:
         for colonne in range(self.colonnes):
             self.cadre_principal.grid_columnconfigure(colonne + 1, weight=1)  # Changement de la colonne
 
+        # On assigne la méthode clic_droit à chaque bouton, en plus de la méthode cliquer
         for ligne in range(self.lignes):
             for colonne in range(self.colonnes):
                 self.boutons[ligne][colonne].bind("<Button-3>", lambda evenement, r=ligne, c=colonne: self.clic_droit(evenement, r, c))
@@ -86,13 +89,15 @@ class Plateau:
         self.mines_label.config(bg="red")
 
 
-
+    # méthode pour cliquer sur une case, révélant si elle contient une mine ou non, et affichant le nombre de mines adjacentes si c'est le cas.
+    # Si la case est vide, on révèle toutes les cases adjacentes en rappellant la méthode récursivement jusqu'à atteindre une case avec des mines adjacentes.
     def cliquer(self, x, y):
         coordonnes = []  
         case = self.grille[x][y]
         if not case.drapeau:
             case.revele = True
             bouton = self.boutons[x][y]
+            # Si la case contient une mine, on affiche une bombe et on révèle toutes les mines
             if case.mine:
                 bouton.config(text="💣", bg="red")
                 for i in range(self.lignes):
@@ -102,12 +107,14 @@ class Plateau:
                 self.arreter_chrono()
                 self.defaite()
             else:
+                # Si c'est le premier coup, on place les mines et on lance le chrono
                 if self.premier_coup:
                     self.premier_coup = False
                     self.placer_mines()
                     self.afficher()
                     self.lancer_chrono()
                 mines_adjacentes = self.verifier_voisins(x, y)
+                # Si il n'y a pas de mines adjacentes, on révèle les cases adjacentes
                 if mines_adjacentes == 0:
                     bouton.config(text="", bg="lightgray")
                     coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
@@ -115,14 +122,17 @@ class Plateau:
                         if coordonne[0] >= 0 and coordonne[0] < self.lignes and coordonne[1] >= 0 and coordonne[1] < self.colonnes:
                             case = self.grille[coordonne[0]][coordonne[1]]
                             if not case.revele:
-                                self.cliquer(coordonne[0], coordonne[1])
+                                self.cliquer(coordonne[0], coordonne[1]) # Appel récursif
+                # Sinon, on affiche le nombre de mines adjacentes
                 elif mines_adjacentes > 0:
                     bouton.config(text=mines_adjacentes, bg="gray")
+                # On vérifie si le joueur a gagné
                 if self.verifier_victoire():
                     self.arreter_chrono()
                     messagebox.showinfo("Gagné", f"Vous avez gagné en {self.chrono // 60} minutes et {self.chrono % 60} secondes !")
                     self.fenetre.destroy()
 
+    # méthode pour vérifier le nombre de mines adjacentes à une case
     def verifier_voisins(self, x, y):
         mines_adjacentes = 0
         coordonnes = [(x-1, y-1), (x-1, y), (x-1, y+1), (x, y-1), (x, y+1), (x+1, y-1), (x+1, y), (x+1, y+1)]
@@ -133,6 +143,7 @@ class Plateau:
                     mines_adjacentes += 1
         return mines_adjacentes
 
+    # méthode pour afficher la grille dans la console, utilisée pour le débogage
     def afficher(self):
         for ligne in self.grille:
             for case in ligne:
@@ -142,16 +153,18 @@ class Plateau:
                     print("-", end=" ")
             print()
 
+    # méthode pour placer les mines aléatoirement
     def placer_mines(self):
         for i in range(self.mines):
             place = False
             while not place:
                 x = random.randint(0, self.lignes - 1)
                 y = random.randint(0, self.colonnes - 1)
-                if not self.grille[x][y].mine and not self.grille[x][y].revele:
+                if not self.grille[x][y].mine and not self.grille[x][y].revele: # On vérifie que la case ne contient pas déjà une mine
                     self.grille[x][y].mine = True
                     place = True
     
+    # méthode pour gérer le clic droit, permettant de placer des drapeaux ou des points d'interrogation
     def clic_droit(self, evenement, x, y):
         case = self.grille[x][y]
         bouton = self.boutons[x][y]
@@ -173,11 +186,13 @@ class Plateau:
                 self.interrogations -= 1
                 self.interrogations_label.config(text=f"❓: {self.interrogations}")
 
+    # méthode pour gérer la défaite du joueur
     def defaite(self):
         winsound.PlaySound(self.son_bombe, winsound.SND_FILENAME)
         messagebox.showinfo("Perdu", "Vous avez perdu !")
         self.fenetre.destroy()
 
+    # méthode pour vérifier si le joueur a gagné, c'est-à-dire si toutes les cases sans mines ont été révélées
     def verifier_victoire(self):
         for ligne in self.grille:
             for case in ligne:
@@ -186,10 +201,12 @@ class Plateau:
         self.sauvegarder_scores() 
         return True
     
+    # méthode pour rejouer, détruisant la fenêtre actuelle et en créant une nouvelle
     def rejouer(self):
         self.fenetre.destroy()
         plateau = Plateau(self.difficulte)
 
+    # méthode pour lancer le chrono
     def lancer_chrono(self):
         self.chrono += 1
         minutes = self.chrono // 60
@@ -197,10 +214,12 @@ class Plateau:
         self.chrono_label.config(text=f"{minutes:02d}:{secondes:02d}")
         self.fenetre.after(1000, self.lancer_chrono)
 
+    # méthode pour arrêter le chrono
     def arreter_chrono(self):
         self.fenetre.after_cancel(self.lancer_chrono)
         self.chrono_label.destroy()
 
+    # méthode pour sauvegarder les scores dans un fichier JSON
     def sauvegarder_scores(self):
         score_data = {
             "pseudo": self.pseudo,
