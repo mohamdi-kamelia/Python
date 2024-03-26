@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-from Plateau import *  # Supposons que Plateau soit un module que vous avez créé pour votre jeu
+from Plateau import *  
 import json
 
 class Page_Accueil(tk.Tk):
@@ -61,6 +61,7 @@ class Page_Accueil(tk.Tk):
         self.pseudo.insert(0, "Entrez votre pseudo")
         self.pseudo.bind("<FocusIn>", self.clear_entry)
 
+  #Lance une nouvelle partie avec la difficulté "Difficile"
     def mode_difficultes(self):
         pseudo = self.pseudo.get()
         self.destroy()
@@ -68,6 +69,7 @@ class Page_Accueil(tk.Tk):
         page_accueil = Page_Accueil()
         page_accueil.mainloop()
 
+    #Lance une nouvelle partie avec la difficulté "moyen"
     def mode_moyen(self):
         pseudo = self.pseudo.get()
         self.destroy()
@@ -75,9 +77,11 @@ class Page_Accueil(tk.Tk):
         page_accueil = Page_Accueil()
         page_accueil.mainloop()
 
+    #quitter le jeu
     def quitter_jeu(self):
         self.destroy()
 
+    #Lance une nouvelle partie avec la difficulté "facile"
     def demarrer_jeu(self):
         pseudo = self.pseudo.get()
         self.destroy()
@@ -85,6 +89,7 @@ class Page_Accueil(tk.Tk):
         page_accueil = Page_Accueil()
         page_accueil.mainloop()
         
+    #Efface le contenu de l'entrée 'pseudo' lorsqu'elle est sélectionnée.
     def clear_entry(self, event):
         self.pseudo.delete(0, tk.END)
         self.pseudo.config(fg="black")
@@ -110,7 +115,7 @@ class Page_Accueil(tk.Tk):
         messagebox.showinfo("Scores", score_text)
         
     def afficher_instructions(self):
-        # Ici, vous pouvez définir le contenu des instructions et les afficher dans une boîte de dialogue
+        # définition de contenu des instructions et les afficher dans une boîte de dialogue
         instructions = "Instructions du jeu Démineur :\n\n1. Cliquez sur une case pour révéler ce qu'elle cache.\n2. Si vous trouvez une mine, le jeu est terminé.\n3. Utilisez les chiffres pour déterminer où sont les mines.\n4. Marquez les mines avec des drapeaux pour éviter de les cliquer accidentellement.\n5. Marquez toutes les mines pour gagner le jeu."
         messagebox.showinfo("Instructions", instructions)
 if __name__ == "__main__":
